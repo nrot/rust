@@ -426,8 +426,19 @@ impl Socket {
         setsockopt(self, libc::IPPROTO_TCP, libc::TCP_NODELAY, nodelay as c_int)
     }
 
+    #[allow(dead_code)]
+    pub fn set_cork(&self, cork: bool) -> io::Result<()> {
+        setsockopt(self, libc::IPPROTO_TCP, libc::TCP_CORK, cork as c_int)
+    }
+
     pub fn nodelay(&self) -> io::Result<bool> {
         let raw: c_int = getsockopt(self, libc::IPPROTO_TCP, libc::TCP_NODELAY)?;
+        Ok(raw != 0)
+    }
+
+    #[allow(dead_code)]
+    pub fn cork(&self)->io::Result<bool>{
+        let raw: c_int = getsockopt(self, libc::IPPROTO_TCP, libc::TCP_CORK)?;
         Ok(raw != 0)
     }
 
